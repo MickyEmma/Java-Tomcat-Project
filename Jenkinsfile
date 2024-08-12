@@ -8,7 +8,7 @@ node('built-in') {
     }
 
     stage('Continuous Deployment to Nexus') {
-        withCredentials([usernamePassword(credentialsId: 'jenkins', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+        withCredentials([usernamePassword(credentialsId: 'jenkins', usernameVariable: 'admin', passwordVariable: 'admin')]) {
             sh label: '', script: """
                 mvn deploy:deploy-file -DgroupId=com.example \
                                        -DartifactId=webapp \
