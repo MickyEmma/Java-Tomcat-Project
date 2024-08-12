@@ -1,36 +1,39 @@
 pipeline {
     agent any
+
     stages {
-        stage('ContDownload') {
+        stage('Continuous Download') {
             steps {
                 git 'https://github.com/Xclusivep/maven.git'
             }
         }
-        stage('ContBuild') {
+
+        stage('Continuous Build') {
             steps {
                 sh 'mvn package'
             }
         }
-        stage('ContDeployment') {
+
+        stage('Push to Nexus') {
             steps {
-                // Use Jenkins environment variables and correct the file path
-                sh 'scp $WORKSPACE/webapp/target/webapp.war vagrant@54.226.16.75:/var/lib/tomcat7/webapps/qaenv.war'
-            }
-        }
-        stage('ContTesting') {
-            steps {
-                git 'https://github.com/selenium-saikrishna/TestingOnLinux.git'
-                sh 'java -jar $WORKSPACE/testing.jar'
+                // Upload the artifact to Nexus
+                nexusPublisher nexusInstanceId: 'nexus-instance', 
+                               nexusRepositoryId: 'maven-releases',
+                               packages: [
+                                   [$class: 'MavenPackage', 
+                                    mavenAssetList: [[classifier: '', extension: 'jar', file: 'webapp/target/webapp.war']],
+                                    mavenCoordinate: [groupId: 'com.example', artifactId: 'webapp', version: '1.0-SNAPSHOT']]
+                               ]
             }
         }
     }
+
     post {
         success {
-            input message: 'Waiting for approval from DM', submitter: 'Srinivas'
-            sh 'scp $WORKSPACE/webapp/target/webapp.war vagrant@54.226.16.75:/var/lib/tomcat7/webapps/prodenv.war'
+            echo 'Build and artifact upload to Nexus successful.'
         }
         failure {
-            mail bcc: '', body: 'The build has failed. Please check the Jenkins console output for details.', cc: '', from: '', replyTo: '', subject: 'Build failed', to: 'udenyipeetrudenyi05@gmail.com'
+            echo 'Build or artifact upload failed.'
         }
     }
 }
