@@ -1,52 +1,36 @@
-pipeline
-{
+pipeline {
     agent any
-    stages
-    {
-        stage('ContDownload')
-        {
-            steps
-            {
+    stages {
+        stage('ContDownload') {
+            steps {
                 git 'https://github.com/Xclusivep/maven.git'
             }
         }
-        stage('ContBuild')
-        {
-            steps
-            {
+        stage('ContBuild') {
+            steps {
                 sh 'mvn package'
             }
         }
-        stage('ContDeployment')
-        {
-            steps
-            {
-                sh 'scp /var/lib/jenkins/workspace/Declarative_Pipeline/webapp/target/webapp.war vagrant@54.226.16.75:/var/lib/tomcat7/webapps/qaenv.war'
+        stage('ContDeployment') {
+            steps {
+                // Use Jenkins environment variables and correct the file path
+                sh 'scp $WORKSPACE/webapp/target/webapp.war vagrant@54.226.16.75:/var/lib/tomcat7/webapps/qaenv.war'
             }
         }
-        stage('ContTesting')
-        {
-            steps
-            {
+        stage('ContTesting') {
+            steps {
                 git 'https://github.com/selenium-saikrishna/TestingOnLinux.git'
-                sh 'java -jar  /var/lib/jenkins/workspace/Declarative_Pipeline/testing.jar'
+                sh 'java -jar $WORKSPACE/testing.jar'
             }
         }
     }
-    post
-    {
-        success
-        {
+    post {
+        success {
             input message: 'Waiting for approval from DM', submitter: 'Srinivas'
-    sh 'scp /var/lib/jenkins/workspace/Declarative_Pipeline/webapp/target/webapp.war vagrant@54.226.16.75:/var/lib/tomcat7/webapps/prodenv.war'
+            sh 'scp $WORKSPACE/webapp/target/webapp.war vagrant@54.226.16.75:/var/lib/tomcat7/webapps/prodenv.war'
         }
-        failure
-        {
-            mail bcc: '', body: '', cc: '', from: '', replyTo: '', subject: 'Build failed', to: 'udenyipeetrudenyi05@gmail.com'
-            
+        failure {
+            mail bcc: '', body: 'The build has failed. Please check the Jenkins console output for details.', cc: '', from: '', replyTo: '', subject: 'Build failed', to: 'udenyipeetrudenyi05@gmail.com'
         }
-        
-     }
-      
-    
+    }
 }
