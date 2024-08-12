@@ -1,23 +1,29 @@
-node('built-in') 
-{
-    stage('Continuous Download') 
-	{
-    git 'https://github.com/Xclusivep/maven.git'
-	}
-    stage('Continuous Build') 
-	{
-    sh label: '', script: 'mvn package'
-	}
-    stage('Continuous Deployment') 
-	{
-sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war   ubuntu@172.31.26.217:/var/lib/tomcat8/webapps/qaenv.war'
-	}
-    stage('Continuous Testing') 
-	{
-              sh label: '', script: 'echo "Testing Passed"'
-	}
-    stage('Continuous Delivery') 
-	{
-sh label: '', script: 'scp /home/ubuntu/.jenkins/workspace/ScriptedPipeline/webapp/target/webapp.war   ubuntu@172.31.22.88:/var/lib/tomcat8/webapps/prodenv.war'
-	}
+node('built-in') {
+    stage('Continuous Download') {
+        git 'https://github.com/Xclusivep/maven.git'
+    }
+
+    stage('Continuous Build') {
+        sh label: '', script: 'mvn package'
+    }
+
+    stage('Continuous Deployment to Nexus') {
+        withCredentials([usernamePassword(credentialsId: 'jenkins', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+            sh label: '', script: """
+                mvn deploy:deploy-file -DgroupId=com.example \
+                                       -DartifactId=webapp \
+                                       -Dversion=1.0-SNAPSHOT \
+                                       -Dpackaging=war \
+                                       -Dfile=webapp/target/webapp.war \
+                                       -DrepositoryId=jenkins \
+                                       -Durl=http://54.237.230.16:8081/repository/maven-releases/ \
+                                       -Dusername=$admin \
+                                       -Dpassword=$admin
+            """
+        }
+    }
+
+    stage('Continuous Testing') {
+        sh label: '', script: 'echo "udenyi peter the Testing Passed"'
+    }
 }
