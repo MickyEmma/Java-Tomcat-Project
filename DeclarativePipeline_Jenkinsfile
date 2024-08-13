@@ -1,39 +1,52 @@
-pipeline {
+pipeline
+{
     agent any
-
-    stages {
-        stage('Continuous Download') {
-            steps {
-                git 'https://github.com/Xclusivep/maven.git'
+    stages
+    {
+        stage('ContDownload')
+        {
+            steps
+            {
+                git 'https://github.com/selenium-saikrishna/maven.git'
             }
         }
-
-        stage('Continuous Build') {
-            steps {
+        stage('ContBuild')
+        {
+            steps
+            {
                 sh 'mvn package'
             }
         }
-
-        stage('Push to Nexus') {
-            steps {
-                // Upload the artifact to Nexus
-                nexusPublisher nexusInstanceId: 'nexus-instance', 
-                               nexusRepositoryId: 'maven-releases',
-                               packages: [
-                                   [$class: 'MavenPackage', 
-                                    mavenAssetList: [[classifier: '', extension: 'jar', file: 'webapp/target/webapp.war']],
-                                    mavenCoordinate: [groupId: 'com.example', artifactId: 'webapp', version: '1.0-SNAPSHOT']]
-                               ]
+        stage('ContDeployment')
+        {
+            steps
+            {
+                sh 'scp /var/lib/jenkins/workspace/Declarative_Pipeline/webapp/target/webapp.war vagrant@10.10.10.32:/var/lib/tomcat7/webapps/qaenv.war'
+            }
+        }
+        stage('ContTesting')
+        {
+            steps
+            {
+                git 'https://github.com/selenium-saikrishna/TestingOnLinux.git'
+                sh 'java -jar  /var/lib/jenkins/workspace/Declarative_Pipeline/testing.jar'
             }
         }
     }
-
-    post {
-        success {
-            echo 'Build and artifact upload to Nexus successful.'
+    post
+    {
+        success
+        {
+            input message: 'Waiting for approval from DM', submitter: 'Srinivas'
+    sh 'scp /var/lib/jenkins/workspace/Declarative_Pipeline/webapp/target/webapp.war vagrant@10.10.10.33:/var/lib/tomcat7/webapps/prodenv.war'
         }
-        failure {
-            echo 'Build or artifact upload failed.'
+        failure
+        {
+            mail bcc: '', body: '', cc: '', from: '', replyTo: '', subject: 'Build failed', to: 'gandham.saikrishna@gmail.com'
+            
         }
-    }
+        
+     }
+      
+    
 }
