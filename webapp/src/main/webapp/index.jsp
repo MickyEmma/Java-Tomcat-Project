@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome to DevOps World</title>
+    <title>Welcome to DevOps World Benjamin Baden</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -58,7 +58,7 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to DevOps World!</h1>
+        <h1>Welcome to DevOps World Benjamin Baden</h1>
     </header>
     <div class="message-box">
         <%
@@ -68,7 +68,7 @@
                 out.println("<p>We are currently on Jenkins. You have been awesome. Keep it up!</p>");
                 out.println("<p>Remember, <strong>DevOps is the goal!!!</strong></p>");
             } else {
-                out.println("<p>Hello, we are currently CICD with Jenkins and you Have been awesome, keep it up, DevOps is the Goal!!!.</p>");
+                out.println("<p>Hello,You Have been awesome, keep it up, DevOps is the Goal!!!.</p>");
             }
         %>
     </div>
