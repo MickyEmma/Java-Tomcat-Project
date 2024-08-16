@@ -68,7 +68,7 @@
                 out.println("<p>We are currently on Jenkins. You have been awesome. Keep it up!</p>");
                 out.println("<p>Remember, <strong>DevOps is the goal!!!</strong></p>");
             } else {
-                out.println("<p>Hello,You Have been awesome, keep it up, DevOps is the Goal!!!.</p>");
+                out.println("<p>Hello Ben,You Have been awesome, keep it up, DevOps is the Goal!!!.</p>");
             }
         %>
     </div>
