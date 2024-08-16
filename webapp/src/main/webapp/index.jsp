@@ -63,7 +63,7 @@
     <div class="message-box">
         <%
             String username = request.getParameter("username");
-            if (username != null) {
+            if (username != null && !username.isEmpty()) {
                 out.println("<p class='dynamic-content'>Mr. " + username + ", welcome to DevOps!</p>");
                 out.println("<p>We are currently on Jenkins. You have been awesome. Keep it up!</p>");
                 out.println("<p>Remember, <strong>DevOps is the goal!!!</strong></p>");
