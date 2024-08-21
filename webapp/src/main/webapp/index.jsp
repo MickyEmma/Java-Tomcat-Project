@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome to DevOps World Benjamin Baden</title>
+    <title>Welcome to DevOps World michael and jimmy</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
