@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome to DevOps World michael and jimmy</title>
+    <title>Welcome To DevOps World MICKY</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #3c3b3f, #605c3c);
+            background: linear-gradient(to right, #3c3b3f, #4c603c);
             color: #f0f8ff;
             margin: 0;
             padding: 0;
@@ -58,7 +58,7 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to DevOps World Benjamin Baden</h1>
+        <h1>Welcome To DevOps World MICKYSLEEK</h1>
     </header>
     <div class="message-box">
         <%
